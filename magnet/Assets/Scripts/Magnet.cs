@@ -24,7 +24,7 @@ public class Magnet : NetworkBehaviour
     private NetworkVariable<float> netRotation = new NetworkVariable<float>();
     private NetworkVariable<bool> isHeld = new NetworkVariable<bool>(false);
 
-    private static Dictionary<ulong, MagnetDisplay> displayByOwner = new();
+    public static Dictionary<ulong, MagnetDisplay> displayByOwner = new();
 
     private MagnetDisplay homeDisplay;
     private Rigidbody2D rb;
@@ -129,7 +129,6 @@ public class Magnet : NetworkBehaviour
         if (outline != null) outline.SetActive(false);
         OnMagnetPickedUp?.Invoke(this);
     }
-
     public void Drop()
     {
         if (!IsServer) return;
@@ -139,11 +138,17 @@ public class Magnet : NetworkBehaviour
         rb.simulated = true;
         isHeld.Value = false;
 
+        GameManager.Instance?.OnMagnetDropped();
         OnMagnetDropped?.Invoke(this);
 
-        StartCoroutine(MagnetismThenReturn(ownerId.Value, homeDisplay));
-    }
+        ulong currentOwner = GameManager.Instance != null
+            ? GameManager.Instance.GetCurrentTurnOwner()
+            : ownerId.Value;
 
+        displayByOwner.TryGetValue(currentOwner, out MagnetDisplay currentDisplay);
+
+        StartCoroutine(MagnetismThenReturn(currentOwner, currentDisplay));
+    }
     // ------------------------
     // CORE FLOW
     // ------------------------
@@ -173,7 +178,6 @@ public class Magnet : NetworkBehaviour
             foreach (var other in magnets)
             {
                 if (other == m || !other.IsPlaced()) continue;
-
                 if (Vector2.Distance(m.transform.position, other.transform.position) < snapDistance)
                 {
                     toReturn.Add(m);
@@ -183,21 +187,61 @@ public class Magnet : NetworkBehaviour
         }
 
         foreach (var m in toReturn)
-        {
-            Vector3 stackPos = droppedByDisplay.GetNextStackPosition();
+            m.ResetForStack(droppedByOwner, droppedByDisplay);
 
-            m.state.Value = MagnetState.InStack;
-            m.rb.bodyType = RigidbodyType2D.Kinematic;
-            m.rb.simulated = true;
-            m.isHeld.Value = false;
-            m.rb.MovePosition(stackPos);
-            m.transform.position = stackPos;
-            m.netPosition.Value = stackPos;
-            m.netRotation.Value = 0f;
-            m.ownerId.Value = droppedByOwner;
-            m.homeDisplay = droppedByDisplay;
-            m.NetworkObject.ChangeOwnership(droppedByOwner);
+        // Update magnet counts and end turn
+        UpdateMagnetCountsAndEndTurn();
+    }
+
+    private void UpdateMagnetCountsAndEndTurn()
+    {
+        if (!IsServer) return;
+
+        MagnetDisplay[] displays = FindObjectsOfType<MagnetDisplay>();
+        int p1Count = 0, p2Count = 0;
+
+        foreach (var display in displays)
+        {
+            if (display.ownerClientId == 0) p1Count = display.GetStackCount();
+            else p2Count = display.GetStackCount();
         }
+
+        GameManager.Instance?.UpdateMagnetCounts(p1Count, p2Count);
+        GameManager.Instance?.OnTurnResolved();
+    }
+
+    private void ResetForStack(ulong newOwner, MagnetDisplay display)
+    {
+        // Unregister from old display
+        if (homeDisplay != null)
+            homeDisplay.UnregisterMagnet(this);
+
+        Vector3 stackPos = display.GetNextStackPosition();
+
+        ownerId.Value = newOwner;
+        homeDisplay = display;
+        displayByOwner[newOwner] = display;
+
+        display.RegisterMagnet(this);
+
+        state.Value = MagnetState.InStack;
+        isHeld.Value = false;
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.simulated = true;
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        rb.MovePosition(stackPos);
+
+        transform.position = stackPos;
+        transform.rotation = Quaternion.identity;
+
+        netPosition.Value = stackPos;
+        netRotation.Value = 0f;
+
+        if (outline != null) outline.SetActive(false);
+
+        NetworkObject.ChangeOwnership(newOwner);
     }
 
     // ------------------------

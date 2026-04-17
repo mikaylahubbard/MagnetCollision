@@ -56,6 +56,10 @@ public class Players : NetworkBehaviour
 
     void HandlePickupDrop()
     {
+        // Block input if it's not this player's turn or turn is resolving
+        if (GameManager.Instance != null && !GameManager.Instance.IsMyTurn(OwnerClientId))
+            return;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (carriedMagnet == null)
@@ -105,8 +109,6 @@ public class Players : NetworkBehaviour
         carriedMagnet = null;
     }
 
-    // -------- Hover Tracking --------
-
     public void SetHoveredMagnet(Magnet magnet) => hoveredMagnet = magnet;
 
     public void ClearHoveredMagnet(Magnet magnet)
@@ -114,8 +116,6 @@ public class Players : NetworkBehaviour
         if (hoveredMagnet == magnet)
             hoveredMagnet = null;
     }
-
-    // -------- SERVER AUTH --------
 
     [ServerRpc]
     void RequestPickupServerRpc(ulong magnetId, ServerRpcParams rpcParams = default)
