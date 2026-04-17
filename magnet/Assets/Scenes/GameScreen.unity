@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 106651611}
   - component: {fileID: 106651612}
   - component: {fileID: 106651613}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge6
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -750,7 +750,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000009b6a70f82f27d6a9
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -945,7 +945,7 @@ GameObject:
   - component: {fileID: 849239466}
   - component: {fileID: 849239467}
   - component: {fileID: 849239468}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge11
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -1083,7 +1083,7 @@ GameObject:
   - component: {fileID: 859905131}
   - component: {fileID: 859905132}
   - component: {fileID: 859905133}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge10
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -1221,7 +1221,7 @@ GameObject:
   - component: {fileID: 859911423}
   - component: {fileID: 859911424}
   - component: {fileID: 859911425}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge2
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -1359,7 +1359,7 @@ GameObject:
   - component: {fileID: 874024921}
   - component: {fileID: 874024922}
   - component: {fileID: 874024923}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge5
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -1609,6 +1609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagnetDisplay
   ShowTopMostFoldoutHeaderGroup: 1
   magnetPrefab: {fileID: 8201049311461064125, guid: 6353e6d5d80034879a555d49e0484eef, type: 3}
+  ownerClientId: 0
   magnetCount: 10
   spacing: 0.4
 --- !u!4 &1002692083
@@ -1662,7 +1663,7 @@ GameObject:
   - component: {fileID: 1036170821}
   - component: {fileID: 1036170822}
   - component: {fileID: 1036170823}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge7
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -1800,7 +1801,7 @@ GameObject:
   - component: {fileID: 1138166530}
   - component: {fileID: 1138166531}
   - component: {fileID: 1138166532}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge1
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -1938,7 +1939,7 @@ GameObject:
   - component: {fileID: 1197538675}
   - component: {fileID: 1197538676}
   - component: {fileID: 1197538677}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge4
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -2215,6 +2216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagnetDisplay
   ShowTopMostFoldoutHeaderGroup: 1
   magnetPrefab: {fileID: 8201049311461064125, guid: 6353e6d5d80034879a555d49e0484eef, type: 3}
+  ownerClientId: 1
   magnetCount: 10
   spacing: 0.4
 --- !u!114 &1393148185
@@ -2390,7 +2392,7 @@ GameObject:
   - component: {fileID: 1702551913}
   - component: {fileID: 1702551914}
   - component: {fileID: 1702551915}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge9
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -2572,7 +2574,7 @@ GameObject:
   - component: {fileID: 1830724017}
   - component: {fileID: 1830724018}
   - component: {fileID: 1830724019}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge12
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -2710,7 +2712,7 @@ GameObject:
   - component: {fileID: 1865945933}
   - component: {fileID: 1865945934}
   - component: {fileID: 1865945935}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge3
   m_TagString: edge
   m_Icon: {fileID: 0}
@@ -2848,7 +2850,7 @@ GameObject:
   - component: {fileID: 2104610647}
   - component: {fileID: 2104610648}
   - component: {fileID: 2104610649}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: edge8
   m_TagString: edge
   m_Icon: {fileID: 0}

@@ -9,8 +9,11 @@ public class Players : NetworkBehaviour
         writePerm: NetworkVariableWritePermission.Owner);
 
     private Magnet carriedMagnet = null;
+    private Magnet hoveredMagnet = null;
 
     public SpriteRenderer spriteRenderer;
+
+    private float currentRotation = 0f;
 
     public override void OnNetworkSpawn()
     {
@@ -47,7 +50,6 @@ public class Players : NetworkBehaviour
         float v = Input.GetAxis("Vertical");
 
         Vector3 newPos = transform.position + new Vector3(h, v, 0) * speed * Time.deltaTime;
-
         transform.position = newPos;
         netPosition.Value = newPos;
     }
@@ -64,26 +66,34 @@ public class Players : NetworkBehaviour
 
         if (carriedMagnet != null)
         {
-            Vector3 offset = new Vector3(0, 0.5f, 0);
-            carriedMagnet.SetPositionServerRpc(transform.position + offset);
+            carriedMagnet.SetPositionServerRpc(transform.position + new Vector3(0, 0.5f, 0));
+            HandleMagnetRotation();
+        }
+    }
+
+    void HandleMagnetRotation()
+    {
+        float rotationSpeed = 150f;
+        float input = 0f;
+
+        if (Input.GetKey(KeyCode.Q)) input += 1f;
+        if (Input.GetKey(KeyCode.E)) input -= 1f;
+
+        if (input != 0f)
+        {
+            currentRotation += input * rotationSpeed * Time.deltaTime;
+            carriedMagnet.SetRotationServerRpc(currentRotation);
         }
     }
 
     void TryPickUpMagnet()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0.7f);
+        if (hoveredMagnet == null) return;
 
-        foreach (var hit in hits)
+        if (hoveredMagnet.GetOwner() == OwnerClientId && hoveredMagnet.IsInStack())
         {
-            if (hit.gameObject == gameObject) continue;
-
-            Magnet magnet = hit.GetComponent<Magnet>();
-
-            if (magnet != null && !magnet.IsHeld())
-            {
-                RequestPickupServerRpc(magnet.NetworkObjectId);
-                return;
-            }
+            currentRotation = 0f;
+            RequestPickupServerRpc(hoveredMagnet.NetworkObjectId);
         }
     }
 
@@ -95,21 +105,30 @@ public class Players : NetworkBehaviour
         carriedMagnet = null;
     }
 
+    // -------- Hover Tracking --------
+
+    public void SetHoveredMagnet(Magnet magnet) => hoveredMagnet = magnet;
+
+    public void ClearHoveredMagnet(Magnet magnet)
+    {
+        if (hoveredMagnet == magnet)
+            hoveredMagnet = null;
+    }
+
+    // -------- SERVER AUTH --------
+
     [ServerRpc]
     void RequestPickupServerRpc(ulong magnetId, ServerRpcParams rpcParams = default)
     {
         if (!NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(magnetId)) return;
 
-        var netObj = NetworkManager.SpawnManager.SpawnedObjects[magnetId];
-        var magnet = netObj.GetComponent<Magnet>();
-
+        var magnet = NetworkManager.SpawnManager.SpawnedObjects[magnetId].GetComponent<Magnet>();
         if (magnet == null || magnet.IsHeld()) return;
 
         ulong senderId = rpcParams.Receive.SenderClientId;
+        if (magnet.GetOwner() != senderId || !magnet.IsInStack()) return;
 
-        netObj.ChangeOwnership(senderId);
         magnet.PickUp(senderId);
-
         SetCarriedMagnetClientRpc(magnetId, senderId);
     }
 
@@ -118,9 +137,7 @@ public class Players : NetworkBehaviour
     {
         if (!NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(magnetId)) return;
 
-        var netObj = NetworkManager.SpawnManager.SpawnedObjects[magnetId];
-        var magnet = netObj.GetComponent<Magnet>();
-
+        var magnet = NetworkManager.SpawnManager.SpawnedObjects[magnetId].GetComponent<Magnet>();
         if (magnet == null) return;
 
         magnet.Drop();
@@ -130,10 +147,8 @@ public class Players : NetworkBehaviour
     void SetCarriedMagnetClientRpc(ulong magnetId, ulong ownerId)
     {
         if (OwnerClientId != ownerId) return;
-
         if (!NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(magnetId)) return;
 
-        var netObj = NetworkManager.SpawnManager.SpawnedObjects[magnetId];
-        carriedMagnet = netObj.GetComponent<Magnet>();
+        carriedMagnet = NetworkManager.SpawnManager.SpawnedObjects[magnetId].GetComponent<Magnet>();
     }
 }

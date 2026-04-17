@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7604441057689489261}
   - component: {fileID: 132938194521388110}
   - component: {fileID: 2322370794304239087}
-  - component: {fileID: 4610675490239619906}
-  m_Layer: 0
+  - component: {fileID: 98269766388458778}
+  m_Layer: 7
   m_Name: Player2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -134,8 +134,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Players
   ShowTopMostFoldoutHeaderGroup: 1
   speed: 5
-  player1Spawn: {fileID: 0}
-  player2Spawn: {fileID: 0}
   spriteRenderer: {fileID: 5889585147089206871}
 --- !u!50 &2322370794304239087
 Rigidbody2D:
@@ -164,8 +162,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!66 &4610675490239619906
-CompositeCollider2D:
+--- !u!58 &98269766388458778
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -198,14 +196,5 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
-  m_GenerationType: 0
-  m_EdgeRadius: 0
-  m_ColliderPaths: []
-  m_CompositePaths:
-    m_Paths: []
-  m_VertexDistance: 0.0005
-  m_OffsetDistance: 0.00005
-  m_UseDelaunayMesh: 0
-  m_CompositeGameObject: {fileID: 2401101326233011914}
+  m_Offset: {x: 0, y: 0.21133333}
+  m_Radius: 0.5

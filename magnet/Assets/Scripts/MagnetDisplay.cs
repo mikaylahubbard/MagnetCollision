@@ -4,12 +4,15 @@ using UnityEngine;
 public class MagnetDisplay : NetworkBehaviour
 {
     public GameObject magnetPrefab;
+
+    // Player1Magnets = 0, Player2Magnets = 1
+    public ulong ownerClientId;
+
     public int magnetCount = 10;
     public float spacing = 0.6f;
 
     public override void OnNetworkSpawn()
     {
-        // ONLY SERVER SPAWNS MAGNETS
         if (!IsServer) return;
 
         SpawnMagnets();
@@ -24,15 +27,34 @@ public class MagnetDisplay : NetworkBehaviour
             GameObject magnetObj = Instantiate(magnetPrefab, pos, Quaternion.identity);
 
             var netObj = magnetObj.GetComponent<NetworkObject>();
+            var magnet = magnetObj.GetComponent<Magnet>();
 
             if (netObj != null)
             {
-                netObj.Spawn();
+
+                netObj.SpawnWithOwnership(ownerClientId);
+
+                magnet.Initialize(ownerClientId, pos, this);
             }
             else
             {
                 Debug.LogError("Magnet prefab is missing NetworkObject!");
             }
         }
+    }
+
+    public Vector3 GetNextStackPosition()
+    {
+        int count = 0;
+
+        foreach (var magnet in FindObjectsOfType<Magnet>())
+        {
+            if (magnet.GetOwner() == ownerClientId && magnet.IsInStack())
+            {
+                count++;
+            }
+        }
+
+        return transform.position + new Vector3(0, count * spacing, 0);
     }
 }
