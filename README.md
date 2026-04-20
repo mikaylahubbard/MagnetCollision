@@ -55,7 +55,7 @@ Core Game Loop
 
 ### Other Controls
 
-- **esc*
+- **esc**
   - Pause gameplay
 
 Current Implementation
@@ -153,10 +153,11 @@ The in-game HUD displays:
 
 ### Pause Menu
 Accessible at any time during gameplay via the **Escape** key:
+- **Music Toggle** — turns music on or off
 - **Volume slider** — adjusts master audio volume; saved via `PlayerPrefs`
-- **Quit to Menu** — returns both players to the main menu (host-triggered, synced to client)
-- **Quit Game** — exits the application
-- The pause menu is only functional for the active player during their turn; the non-active player can still access settings
+- **Return to Menu** — returns to the main menu 
+- **Resume Game** — exits the pause menu / resumes play
+
 
 ### Core Game Loop Summary
 | Phase | Description |
@@ -211,7 +212,7 @@ How to Test Multiplayer
 ### Host + Client
 
 1.  Press **Play** in Unity (acts as Host)
-2.  Press **Start Host** in the Network Manager
 3.  Open up a clone of the project
 4.  Play the clone
-5.  Press **Start Client** in the clone's Network Manager
+5.  Click the **Start as Host** button on the host instance
+6.  Click the **Join as P2** button on the client instance
