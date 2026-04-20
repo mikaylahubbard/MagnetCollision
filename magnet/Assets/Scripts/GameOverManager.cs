@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using SQLite;
+using System.Collections.Generic;
 
 public class GameOverManager : MonoBehaviour
 {

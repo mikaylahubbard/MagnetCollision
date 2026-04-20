@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Unity.Netcode;
+using SQLite;
+using System.Collections.Generic;
 
 public class PauseMenuManager : MonoBehaviour
 {

@@ -2,6 +2,8 @@ using Unity.Netcode;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using SQLite;
+using System.Collections.Generic;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
@@ -114,9 +116,9 @@ public class GameManager : NetworkBehaviour
         if (!IsServer) return;
 
         if (p1Count == 0)
-            TriggerGameOverClientRpc(1);
-        else if (p2Count == 0)
             TriggerGameOverClientRpc(0);
+        else if (p2Count == 0)
+            TriggerGameOverClientRpc(1);
     }
 
     [ClientRpc]

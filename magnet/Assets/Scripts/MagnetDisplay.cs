@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
+using SQLite;
+
 
 public class MagnetDisplay : NetworkBehaviour
 {
