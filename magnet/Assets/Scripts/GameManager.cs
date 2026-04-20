@@ -24,7 +24,7 @@ public class GameManager : NetworkBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -61,6 +61,8 @@ public class GameManager : NetworkBehaviour
 
     public void OnTurnResolved()
     {
+
+        Debug.Log($"[GameManager] OnTurnResolved called, IsServer={IsServer}");
         if (!IsServer) return;
 
         isResolvingTurn.Value = false;
@@ -71,22 +73,25 @@ public class GameManager : NetworkBehaviour
 
     public void OnMagnetDropped()
     {
+        Debug.Log($"[GameManager] OnMagnetDropped called, IsServer={IsServer}");
         if (!IsServer) return;
         isResolvingTurn.Value = true;
     }
 
     void UpdateUI()
     {
-        if (turnText == null) return;
+        if (turnText == null)
+        {
+            Debug.LogWarning("[GameManager] turnText is null");
+            return;
+        }
+
+        Debug.Log($"[GameManager] UpdateUI — resolving={isResolvingTurn.Value}, turn={currentTurnOwner.Value}");
 
         if (isResolvingTurn.Value)
-        {
             turnText.text = "Resolving...";
-        }
         else
-        {
             turnText.text = currentTurnOwner.Value == 0 ? "Player 1's Turn" : "Player 2's Turn";
-        }
     }
     public void UpdateMagnetCounts(int p1Count, int p2Count)
     {

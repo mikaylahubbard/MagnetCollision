@@ -6,7 +6,9 @@ using TMPro;
 public class GameOverManager : MonoBehaviour
 {
     public TextMeshProUGUI winnerText;
-    public Button playAgainButton;
+    public Button playBoard1;
+
+    public Button playBoard2;
 
     void Start()
     {
@@ -16,11 +18,16 @@ public class GameOverManager : MonoBehaviour
         if (winnerText != null)
             winnerText.text = $"{winnerName} Wins!";
 
-        if (playAgainButton != null)
-            playAgainButton.onClick.AddListener(PlayAgain);
+        if (playBoard1 != null)
+            playBoard1.onClick.AddListener(() => PlayAgain(1));
+
+        if (playBoard2 != null)
+            playBoard2.onClick.AddListener(() => PlayAgain(2));
+
+
     }
 
-    public void PlayAgain()
+    public void PlayAgain(int boardNumber)
     {
         if (Unity.Netcode.NetworkManager.Singleton != null)
             Unity.Netcode.NetworkManager.Singleton.Shutdown();
@@ -29,6 +36,16 @@ public class GameOverManager : MonoBehaviour
             Destroy(GameManager.Instance.gameObject);
 
         PlayerPrefs.DeleteKey("Winner");
-        SceneManager.LoadScene("GameScreen");
+
+        switch (boardNumber)
+        {
+            case 1:
+                SceneManager.LoadScene("GameScreen");
+                break;
+            case 2:
+                SceneManager.LoadScene("GameScreen2");
+                break;
+        }
+
     }
 }
